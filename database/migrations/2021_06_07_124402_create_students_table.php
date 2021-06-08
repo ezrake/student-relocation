@@ -17,6 +17,7 @@ class CreateStudentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger(('location_id'));
+            $table->string('student_card_uri', 200);
             $table->string('institution');
             $table->string('campus');
             $table->integer('year');
