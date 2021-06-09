@@ -16,8 +16,8 @@ class CreateLocationsTable extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('area_id');
-            $table->string('location', 20);
-            $table->string('map');
+            $table->string('location');
+            $table->string('map_uri');
 
             $table->foreign('area_id')->references('id')->on('areas');
         });
