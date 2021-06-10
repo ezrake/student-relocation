@@ -23,6 +23,9 @@ class CreateReceiptTable extends Migration
             $table->string('phone_no');
             $table->string('license_no');
             $table->timestamps();
+
+            $table->foreign('delivery_note_id')->references('id')->on('delivery_note');
+            $table->foreign('product_id')->references('id')->on('inventory');
         });
     }
 

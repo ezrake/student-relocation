@@ -24,6 +24,8 @@ class CreateInventoryTable extends Migration
             $table->string('description');
             $table->enum('status', ['within_limit', 'discharged', 'overdue']);
             $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('warehouse_orders');
         });
     }
 
