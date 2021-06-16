@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Area extends Model
+class Location extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
-        'county',
-        'sub_county'
+        'area_id',
+        'location',
+        'map_uri'
     ];
 
-    public function locations()
+    public function area()
     {
-        $this->hasMany(Location::class);
+        $this->belongsTo(Area::class);
     }
 }
