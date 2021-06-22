@@ -9,6 +9,8 @@ class Location extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'area_id',
         'location',
@@ -17,6 +19,11 @@ class Location extends Model
 
     public function area()
     {
-        $this->belongsTo(Area::class);
+        return $this->belongsTo(Area::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
     }
 }
