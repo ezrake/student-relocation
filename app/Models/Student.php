@@ -21,11 +21,11 @@ class Student extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function location()
     {
-        $this->belongsTo(Role::class);
+        return $this->belongsTo(Location::class);
     }
 }
