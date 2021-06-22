@@ -15,6 +15,11 @@ class Role extends Model
 
     public function users()
     {
-        $this->hasMany(User::class);
+        return $this->hasMany(User::class);
+    }
+
+    public function students()
+    {
+        return $this->hasManyThrough(Student::class, User::class);
     }
 }
