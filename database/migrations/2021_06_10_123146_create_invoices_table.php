@@ -15,14 +15,16 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('service_id');
+            $table->foreignId('client_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained('users');
+            $table->foreignId('service_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained();
             $table->date('due_date');
             $table->timestamps();
-
-            $table->foreign('client_id')->references('id')->on('users');
-            $table->foreign('service_id')->references('id')->on('services');
-
         });
     }
 

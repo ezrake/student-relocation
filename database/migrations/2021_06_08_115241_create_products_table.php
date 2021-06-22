@@ -16,9 +16,9 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id');
-            $table->decimal('marked_price');
-            $table->decimal('selling_price');
-            $table->boolean('negotiable');
+            $table->decimal('marked_price')->nullable(false);
+            $table->decimal('selling_price')->nullable();
+            $table->boolean('negotiable')->default(false);
             $table->timestamps();
         });
     }

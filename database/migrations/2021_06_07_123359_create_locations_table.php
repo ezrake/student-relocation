@@ -15,11 +15,13 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('area_id');
-            $table->string('location');
-            $table->string('map_uri');
-
-            $table->foreign('area_id')->references('id')->on('areas');
+            $table->foreignId('area_id')
+                ->nullable()
+                ->onUpdate('cascade')
+                ->onDelete('set null')
+                ->constrained();
+            $table->string('location')->nullable(false);
+            $table->string('map_uri')->nullable();
         });
     }
 

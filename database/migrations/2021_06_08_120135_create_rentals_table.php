@@ -15,14 +15,14 @@ class CreateRentalsTable extends Migration
     {
         Schema::create('rentals', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('location_id');
-            $table->json('pics_uri');
-            $table->string('name');
-            $table->string('type');
-            $table->json('description');
+            $table->foreignId('location_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained();
+            $table->json('pics_uri')->nullable();
+            $table->string('name')->nullable(false);
+            $table->json('description')->nullable(false);
             $table->timestamps();
-
-            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 

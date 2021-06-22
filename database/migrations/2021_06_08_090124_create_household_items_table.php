@@ -15,14 +15,15 @@ class CreateHouseholdItemsTable extends Migration
     {
         Schema::create('household_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('owner_id');
-            $table->string('name');
-            $table->string('item_pic_uri');
-            $table->json('description');
+            $table->foreignId('owner_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained('users');
+            $table->string('name')->nullable(false);
+            $table->string('item_pic_uri')->nullable(false);
+            $table->json('description')->nullable(false);
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('owner_id')->references('id')->on('users');
         });
     }
 

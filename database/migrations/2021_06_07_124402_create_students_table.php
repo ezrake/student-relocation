@@ -15,15 +15,19 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger(('location_id'));
+            $table->foreignId('user_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained();
+            $table->foreignId('location_id')
+                ->nullable()
+                ->onUpdate('cascade')
+                ->onDelete('set null')
+                ->constrained();
             $table->string('student_card_uri', 200);
-            $table->string('institution');
-            $table->string('campus');
-            $table->integer('year');
-
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->string('institution')->nullable(false);
+            $table->string('campus')->nullable(false);
+            $table->integer('year')->nullable(false);
         });
     }
 

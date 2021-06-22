@@ -15,15 +15,15 @@ class CreateRelocationChargesTable extends Migration
     {
         Schema::create('relocation_charges', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');
+            $table->foreignId('service_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained();
             $table->string('from');
             $table->string('to');
             $table->string('room_type');
-            $table->integer('packed_items', false, true);
             $table->decimal('standard_charge');
             $table->timestamps();
-
-            $table->foreign('service_id')->references('id')->on('services');
         });
     }
 

@@ -15,13 +15,16 @@ class CreateRoomExchangeTable extends Migration
     {
         Schema::create('room_exchange', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('first_party_id');
-            $table->unsignedBigInteger('second_party_id');
+            $table->foreignId('first_party_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained('users');
+            $table->foreignId('second_party_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained('users');
             $table->json('room_items');
             $table->timestamps();
-
-            $table->foreign('first_party_id')->references('id')->on('users');
-            $table->foreign('second_party_id')->references('id')->on('users');
         });
     }
 

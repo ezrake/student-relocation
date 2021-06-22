@@ -15,17 +15,20 @@ class CreateReceiptTable extends Migration
     {
         Schema::create('receipt', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('delivery_note_id');
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('delivery_note_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained('inventory');
+            $table->foreignId('product_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained('inventory');
             $table->integer('quantity');
             $table->string('transport_company');
             $table->string('driver');
             $table->string('phone_no');
             $table->string('license_no');
             $table->timestamps();
-
-            $table->foreign('delivery_note_id')->references('id')->on('delivery_note');
-            $table->foreign('product_id')->references('id')->on('inventory');
         });
     }
 

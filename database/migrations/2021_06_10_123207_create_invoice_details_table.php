@@ -15,12 +15,14 @@ class CreateInvoiceDetailsTable extends Migration
     {
         Schema::create('invoice_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('invoice_id');
-            $table->unsignedBigInteger('service_charge_id');
-            $table->unsignedBigInteger('other_charges_id')->nullable();
+            $table->foreignId('invoice_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained('invoices');
+            $table->unsignedBigInteger('service_charge_id')
+                ->nullable(false);
+            $table->foreignId('other_charges_id')->nullable();
             $table->timestamps();
-
-            $table->foreign('invoice_id')->references('id')->on('invoices');
         });
     }
 

@@ -15,13 +15,18 @@ class CreateWarehouseTable extends Migration
     {
         Schema::create('warehouse', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('admin_id');
-            $table->unsignedBigInteger('location_id');
-            $table->string('address');
+            $table->foreignId('admin_id')
+                ->nullable()
+                ->onUpdate('cascade')
+                ->onDelete('set null')
+                ->constrained('users');
+            $table->foreignId('location_id')
+                ->nullable()
+                ->onUpdate('cascade')
+                ->onDelete('set null')
+                ->constrained();
+            $table->string('address')->nullable(false);
             $table->timestamps();
-
-            $table->foreign('admin_id')->references('id')->on('users');
-            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 

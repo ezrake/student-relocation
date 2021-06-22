@@ -15,12 +15,13 @@ class CreateRoomExchangeChargesTable extends Migration
     {
         Schema::create('room_exchange_charges', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');
+            $table->foreignId('service_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained();
             $table->boolean('mediated');
             $table->decimal('charge');
             $table->timestamps();
-            
-            $table->foreign('service_id')->references('id')->on('services');
         });
     }
 

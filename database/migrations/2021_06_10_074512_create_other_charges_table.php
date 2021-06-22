@@ -15,12 +15,15 @@ class CreateOtherChargesTable extends Migration
     {
         Schema::create('other_charges', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id')->nullable();
-            $table->decimal('amount', 8, 2, true);
+            $table->foreignId('service_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->nullable()
+                ->constrained();
+            $table->decimal('amount', 8, 2, true)
+                ->nullable(false);
             $table->text('description');
             $table->timestamps();
-
-            $table->foreign('service_id')->references('id')->on('services');
         });
     }
 

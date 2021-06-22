@@ -15,7 +15,10 @@ class CreateRelocationsTable extends Migration
     {
         Schema::create('relocations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained();
             $table->json('from');
             $table->json('to');
             $table->enum('status', ['pending', 'overdue', 'complete']);

@@ -15,17 +15,23 @@ class CreateDeliveryNoteTable extends Migration
     {
         Schema::create('delivery_note', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('client_id');
+            $table->foreignId('order_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained('warehouse_orders');
+            $table->foreignId('product_id')
+                ->onUpdate('cascade')
+                ->onDelete('cascade')
+                ->constrained('inventory');
+            $table->foreignId('client_id')
+                ->nullable()
+                ->onUpdate('cascade')
+                ->onDelete('set null')
+                ->constrained('users');;
             $table->string('remarks');
             $table->date('expected_arrival_date');
             $table->date('delivery_date');
             $table->timestamps();
-
-            $table->foreign('order_id')->references('id')->on('warehouse_orders');
-            $table->foreign('product_id')->references('id')->on('inventory');
-            $table->foreign('client_id')->references('id')->on('users');
         });
     }
 

@@ -15,13 +15,17 @@ class CreateUserServicesTable extends Migration
     {
         Schema::create('user_services', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('service_id');
-            $table->enum('status', ['ongoing', 'completed']);
+            $table->foreignId('user_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained();
+            $table->foreignId('service_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained();
+            $table->enum('status', ['ongoing', 'completed'])
+                ->nullable(false);
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('service_id')->references('id')->on('services');
         });
     }
 

@@ -15,18 +15,20 @@ class CreateWarehouseChargesTable extends Migration
     {
         Schema::create('warehouse_charges', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');
-            $table->unsignedBigInteger('warehouse_id');
+            $table->foreignId('service_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained();
+            $table->foreignId('warehouse_id')
+                ->onUpdate('cascade')
+                ->onUpdate('cascade')
+                ->constrained('warehouse');
             $table->string('name');
             $table->string('room_type');
             $table->integer('packed_items');
             $table->decimal('standard_charge');
             $table->json('description');
             $table->timestamps();
-
-            $table->foreign('service_id')->references('id')->on('services');
-            $table->foreign('warehouse_id')->references('id')->on('warehouse');
-
         });
     }
 
