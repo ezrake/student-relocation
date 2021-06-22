@@ -20,4 +20,9 @@ class Area extends Model
     {
         $this->hasMany(Location::class);
     }
+
+    public function users()
+    {
+        $this->hasManyThrough(User::class, Location::class);
+    }
 }
