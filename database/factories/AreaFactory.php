@@ -22,8 +22,8 @@ class AreaFactory extends Factory
     public function definition()
     {
         return [
-            'county' => $this->faker->state(),
-            'sub_county' => $this->faker->city(),
+            'county' => $this->faker->unique()->state(),
+            'sub_county' => $this->faker->unique()->city(),
         ];
     }
 }
