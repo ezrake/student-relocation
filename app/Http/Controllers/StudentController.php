@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -12,9 +13,25 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $studentsQuery =  DB::table('students')
+            ->select(['users.id', 'name', 'institution', 'campus'])
+            ->join('users', 'students.user_id', '=', 'users.id');
+
+        if ($request->has('search')) {
+            $search = $request->query('search');
+            $studentsQuery = DB::table('students')
+                ->select(['users.id', 'name', 'institution', 'campus'])
+                ->where('name', 'like', '%' . $search . '%')
+                ->where('role_id', '=', '1')
+                ->join('users', 'students.user_id', '=', 'users.id');
+        }
+
+        $students = $studentsQuery->paginate(8)->withQueryString();
+
+        return View('students.index')
+            ->with('students', $students);
     }
 
     /**
@@ -46,7 +63,8 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $student = $student->load(['user', 'location']);
+        return view('students.details', ['student' => $student]);
     }
 
     /**
