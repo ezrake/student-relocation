@@ -17,9 +17,9 @@ class CreateLocationsTable extends Migration
             $table->id();
             $table->foreignId('area_id')
                 ->nullable()
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onDelete('set null')
-                ->constrained();
+                ->onDelete('set null');
             $table->string('location')->nullable(false);
             $table->string('map_uri')->nullable();
         });

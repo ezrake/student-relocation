@@ -16,9 +16,9 @@ class CreateHouseholdItemsTable extends Migration
         Schema::create('household_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('owner_id')
+                ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->constrained('users');
+                ->onDelete('cascade');
             $table->string('name')->nullable(false);
             $table->string('item_pic_uri')->nullable(false);
             $table->json('description')->nullable(false);

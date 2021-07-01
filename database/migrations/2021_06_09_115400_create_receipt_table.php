@@ -16,13 +16,13 @@ class CreateReceiptTable extends Migration
         Schema::create('receipt', function (Blueprint $table) {
             $table->id();
             $table->foreignId('delivery_note_id')
+                ->constrained('inventory')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->constrained('inventory');
+                ->onDelete('cascade');
             $table->foreignId('product_id')
+                ->constrained('inventory')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->constrained('inventory');
+                ->onDelete('cascade');
             $table->integer('quantity');
             $table->string('transport_company');
             $table->string('driver');

@@ -16,9 +16,9 @@ class CreateRoomExchangeTable extends Migration
         Schema::create('room_exchange', function (Blueprint $table) {
             $table->id();
             $table->foreignId('first_party_id')
+                ->constrained('users')
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained('users');
+                ->onDelete('cascade');
             $table->foreignId('second_party_id')
                 ->onUpdate('cascade')
                 ->onUpdate('cascade')

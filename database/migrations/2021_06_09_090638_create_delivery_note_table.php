@@ -16,18 +16,18 @@ class CreateDeliveryNoteTable extends Migration
         Schema::create('delivery_note', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')
+                ->constrained('warehouse_orders')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->constrained('warehouse_orders');
+                ->onDelete('cascade');
             $table->foreignId('product_id')
+                ->constrained('inventory')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->constrained('inventory');
+                ->onDelete('cascade');
             $table->foreignId('client_id')
                 ->nullable()
+                ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('set null')
-                ->constrained('users');;
+                ->onDelete('set null');
             $table->string('remarks');
             $table->date('expected_arrival_date');
             $table->date('delivery_date');

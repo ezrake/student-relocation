@@ -16,10 +16,10 @@ class CreateOtherChargesTable extends Migration
         Schema::create('other_charges', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')
-                ->onUpdate('cascade')
-                ->onUpdate('cascade')
                 ->nullable()
-                ->constrained();
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->decimal('amount', 8, 2, true)
                 ->nullable(false);
             $table->text('description');

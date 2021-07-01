@@ -16,13 +16,13 @@ class CreateWarehouseChargesTable extends Migration
         Schema::create('warehouse_charges', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->foreignId('warehouse_id')
+                ->constrained('warehouse')
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained('warehouse');
+                ->onDelete('cascade');
             $table->string('name');
             $table->string('room_type');
             $table->integer('packed_items');

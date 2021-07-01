@@ -16,9 +16,9 @@ class CreateRelocationChargesTable extends Migration
         Schema::create('relocation_charges', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->string('from');
             $table->string('to');
             $table->string('room_type');

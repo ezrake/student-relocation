@@ -15,7 +15,7 @@ class CreateAreasTable extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
-            $table->string('county')->nullable(false)->unique();
+            $table->string('county')->nullable(false);
             $table->string('sub_county')->nullable(false)->unique();
         });
     }

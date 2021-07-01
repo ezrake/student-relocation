@@ -16,13 +16,13 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')
+                ->constrained('users')
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained('users');
+                ->onDelete('cascade');
             $table->foreignId('service_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->date('due_date');
             $table->timestamps();
         });

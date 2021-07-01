@@ -17,14 +17,16 @@ class CreateWarehouseOrdersTable extends Migration
             $table->id();
             $table->foreignId('warehouse_id')
                 ->nullable()
+                ->constrained('warehouse')
                 ->onUpdate('cascade')
-                ->onDelete('set null')
-                ->constrained('warehouse');
+                ->onDelete('set null');
             $table->foreignId('client_id')
                 ->nullable()
+                ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('set null')
-                ->constrained('users');
+                ->onDelete('set null');
+            $table->string('item');
+            $table->integer('amount', false, true)->nullable(false);
             $table->enum('type', ['dispatch', 'storage'])
                 ->nullable(false);
             $table->enum('status', ['ongoing', 'pending', 'completed'])

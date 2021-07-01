@@ -16,13 +16,13 @@ class CreateUserServicesTable extends Migration
         Schema::create('user_services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->foreignId('service_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->enum('status', ['ongoing', 'completed'])
                 ->nullable(false);
             $table->timestamps();

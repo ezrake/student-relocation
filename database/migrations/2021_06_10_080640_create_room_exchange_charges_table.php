@@ -16,9 +16,9 @@ class CreateRoomExchangeChargesTable extends Migration
         Schema::create('room_exchange_charges', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->boolean('mediated');
             $table->decimal('charge');
             $table->timestamps();

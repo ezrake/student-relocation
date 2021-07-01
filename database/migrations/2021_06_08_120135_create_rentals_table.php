@@ -16,9 +16,9 @@ class CreateRentalsTable extends Migration
         Schema::create('rentals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('location_id')
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->constrained();
+                ->onDelete('cascade');
             $table->json('pics_uri')->nullable();
             $table->string('name')->nullable(false);
             $table->json('description')->nullable(false);

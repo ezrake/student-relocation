@@ -17,14 +17,14 @@ class CreateWarehouseTable extends Migration
             $table->id();
             $table->foreignId('admin_id')
                 ->nullable()
+                ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('set null')
-                ->constrained('users');
+                ->onDelete('set null');
             $table->foreignId('location_id')
                 ->nullable()
+                ->constrained()
                 ->onUpdate('cascade')
-                ->onDelete('set null')
-                ->constrained();
+                ->onDelete('set null');
             $table->string('address')->nullable(false);
             $table->timestamps();
         });

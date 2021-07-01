@@ -16,9 +16,9 @@ class CreateInvoiceDetailsTable extends Migration
         Schema::create('invoice_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')
+                ->constrained('invoices')
                 ->onUpdate('cascade')
-                ->onUpdate('cascade')
-                ->constrained('invoices');
+                ->onDelete('cascade');
             $table->unsignedBigInteger('service_charge_id')
                 ->nullable(false);
             $table->foreignId('other_charges_id')->nullable();

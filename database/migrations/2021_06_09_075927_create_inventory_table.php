@@ -16,11 +16,7 @@ class CreateInventoryTable extends Migration
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('order_id')
-                ->nullable()
-                ->onUpdate()
-                ->onDelete()
-                ->constrained('warehouse_orders');
+            $table->integer('amount', false, true)->nullable(false);
             $table->string('batch_number')
                 ->nullable(false);
             $table->string('serial_number')
@@ -29,8 +25,7 @@ class CreateInventoryTable extends Migration
             $table->string('qr_code_uri')
                 ->unique()
                 ->nullable(false);
-            $table->integer('quantity')
-                ->nullable(false);;
+            $table->integer('quantity', false, true)->nullable(false);;
             $table->string('description');
             $table->enum('status', ['within_limit', 'discharged', 'overdue'])
                 ->nullable(false);
