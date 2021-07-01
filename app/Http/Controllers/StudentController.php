@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
+use App\Models\Location;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +43,27 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        $areas = Area::select(
+            'county',
+            DB::raw('GROUP_CONCAT(id SEPARATOR ",") AS ids'),
+            DB::raw('GROUP_CONCAT(sub_county SEPARATOR ",") AS sub_counties')
+        )
+            ->groupBy('county')
+            ->get();
+
+        $areas = $areas->mapWithKeys(function ($area) {
+            return [
+                $area['county'] => [
+                    'subcounties' => array_combine(
+                        explode(',', $area['ids']),
+                        explode(',', $area['sub_counties'])
+                    )
+                ]
+            ];
+        });
+
+        return view('students.create')
+            ->with('areas', $areas);
     }
 
     /**
@@ -52,7 +74,24 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $student = new Student();
+        $location = Location::where('location', 'like', $request->location)
+            ->first();
+
+        if ($location === null) {
+            $location = new Location();
+            $location->location = $request->location;
+            $location->area_id = $request->subcounty;
+            $location->saveOrFail();
+        }
+        $student->user_id = 440;
+        $student->location_id = $location->id;
+        $student->institution = $request->institution;
+        $student->campus = $request->campus;
+        $student->year = $request->year;
+
+        $student->saveOrFail();
+        return redirect()->route('students.show', $student->id);
     }
 
     /**
@@ -75,7 +114,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return view('students.edit', ['student' => $student]);
     }
 
     /**
@@ -87,7 +126,15 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $student = $student->load('user');
+        $student->user->name = $request->name;
+        $student->user->email = $request->email;
+        $student->institution = $request->institution;
+        $student->campus = $request->campus;
+
+        $student->saveOrFail();
+        $student->fresh('user');
+        return redirect()->route('students.show', $student->id);
     }
 
     /**
@@ -98,6 +145,9 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        if ($student->user->delete()) {
+            return redirect('/');
+        }
+        abort(500, 'Internal error, try again later');
     }
 }
