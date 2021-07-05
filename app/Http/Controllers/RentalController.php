@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
+use App\Models\Location;
 use App\Models\Rental;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
@@ -12,9 +15,19 @@ class RentalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $rentalsQuery = new Rental();
+
+        if ($request->has('search')) {
+            $search = $request->query('search');
+            $rentalsQuery = $rentalsQuery->where('name', 'like', "%$search%");
+        }
+
+        $rentals = $rentalsQuery->with('location')->paginate(8)
+            ->withQueryString();
+
+        return view('rentals.index', ['rentals' => $rentals]);
     }
 
     /**
@@ -24,7 +37,26 @@ class RentalController extends Controller
      */
     public function create()
     {
-        //
+        $areas = Area::select(
+            'county',
+            DB::raw('GROUP_CONCAT(id SEPARATOR ",") AS ids'),
+            DB::raw('GROUP_CONCAT(sub_county SEPARATOR ",") AS sub_counties')
+        )
+            ->groupBy('county')
+            ->get();
+
+        $areas = $areas->mapWithKeys(function ($area) {
+            return [
+                $area['county'] => [
+                    'subcounties' => array_combine(
+                        explode(',', $area['ids']),
+                        explode(',', $area['sub_counties'])
+                    )
+                ]
+            ];
+        });
+
+        return view('rentals.create', ['areas' => $areas]);
     }
 
     /**
@@ -35,7 +67,25 @@ class RentalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rental = new Rental();
+        $location = Location::where('location', 'like', $request->location)
+            ->first();
+
+        if ($location === null) {
+            $location = new Location();
+            $location->location = $request->location;
+            $location->area_id = $request->subcounty;
+            $location->saveOrFail();
+        }
+
+        $rental->location_id = $location->id;
+        $rental->pics_uri = $request->pics_uri;
+        $rental->name = $request->name;
+        $rental->description = $request->description;
+
+        $rental->saveOrFail();
+
+        return redirect()->route('rentals.show', $rental->id);
     }
 
     /**
@@ -46,7 +96,8 @@ class RentalController extends Controller
      */
     public function show(Rental $rental)
     {
-        //
+        $rental = $rental->load('location');
+        return view('rentals.details', ['rental' => $rental]);
     }
 
     /**
@@ -57,7 +108,8 @@ class RentalController extends Controller
      */
     public function edit(Rental $rental)
     {
-        //
+        $rental = $rental->load('location');
+        return view('rentals.edit', ['rental' => $rental]);
     }
 
     /**
@@ -69,7 +121,15 @@ class RentalController extends Controller
      */
     public function update(Request $request, Rental $rental)
     {
-        //
+        $data = $request->all();
+        $location = $rental->location;
+        $location = $location->fill($data);
+        $rental = $rental->fill($data);
+
+        $rental->saveOrFail();
+        $location->saveOrFail();
+
+        return redirect()->route('rentals.show', $rental->id);
     }
 
     /**
@@ -80,6 +140,9 @@ class RentalController extends Controller
      */
     public function destroy(Rental $rental)
     {
-        //
+        if ($rental->delete()) {
+            return redirect()->route('rentals.index');
+        }
+        abort(500, 'Internal error, try again later');
     }
 }
