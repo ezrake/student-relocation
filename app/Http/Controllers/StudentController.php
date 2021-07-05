@@ -30,9 +30,10 @@ class StudentController extends Controller
                 ->join('users', 'students.user_id', '=', 'users.id');
         }
 
-        $students = $studentsQuery->paginate(8)->withQueryString();
+        $students = $studentsQuery->paginate(8)
+            ->withQueryString();
 
-        return View('students.index')
+        return view('students.index')
             ->with('students', $students);
     }
 
@@ -126,14 +127,15 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        $student = $student->load('user');
-        $student->user->name = $request->name;
-        $student->user->email = $request->email;
-        $student->institution = $request->institution;
-        $student->campus = $request->campus;
+        $data = $request->all();
+        $user = $student->user;
+        $user = $user->fill($data);
+        $student = $student->fill($data);
 
+        $user->saveOrFail();
         $student->saveOrFail();
         $student->fresh('user');
+
         return redirect()->route('students.show', $student->id);
     }
 
