@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('students', StudentController::class);
+Route::resource('rentals', RentalController::class);
 
 require __DIR__ . '/auth.php';
