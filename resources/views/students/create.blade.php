@@ -13,7 +13,7 @@
                         @csrf
                         <div class=" mb-3">
                             <label for="address">County</label>
-                            <select name="county" class="form-control" id="county" onchange="subCounty(event)">
+                            <select name="county" class="form-control" id="county">
                                 @foreach ($areas as $area => $subcounties)
                                     <option value="{{ $area }}">{{ $area }}</option>
                                 @endforeach
@@ -56,20 +56,11 @@
     </div>
 @endsection
 <script>
-    function subCounty(e) {
-        let subcountyEl = document.getElementById("subcounty");
-        while (subcountyEl.options.length > 0) {
-            subcountyEl.remove(0);
-        }
+    const areas = {!! json_encode($areas->toArray(), JSON_HEX_TAG) !!}
 
-        let county = e.target.value
-        let areas = {!! json_encode($areas->toArray(), JSON_HEX_TAG) !!}
-        let subCounties = areas[county].subcounties
-
-        Object.keys(subCounties).forEach(
-            key => {
-                let opt = new Option(subCounties[key], key);
-                subcountyEl.appendChild(opt)
-            })
+    const load = () => {
+        const countyEl = document.getElementById('county')
+        countyEl.addEventListener('change', subCounty(areas), false)
     }
+    window.onload = load
 </script>
