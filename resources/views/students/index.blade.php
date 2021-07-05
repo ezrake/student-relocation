@@ -20,7 +20,7 @@
                             <span>Institution: {{ $student->institution }}</span> <br>
                             <span>Campus: {{ $student->campus }}</span>
                         </p>
-                        <a href="/students/{{ $student->id }}"" class=" btn btn-primary">View</a>
+                        <a href="/students/{{ $student->id }}" class=" btn btn-primary">View</a>
                     </div>
                 </div>
             </div>
