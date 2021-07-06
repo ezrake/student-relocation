@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Area;
 use App\Models\Location;
-use App\Models\Student;
+use App\Models\Rental;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class StudentController extends Controller
+class RentalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,24 +17,17 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        $studentsQuery =  DB::table('students')
-            ->select(['users.id', 'name', 'institution', 'campus'])
-            ->join('users', 'students.user_id', '=', 'users.id');
+        $rentalsQuery = new Rental();
 
         if ($request->has('search')) {
             $search = $request->query('search');
-            $studentsQuery = DB::table('students')
-                ->select(['users.id', 'name', 'institution', 'campus'])
-                ->where('name', 'like', '%' . $search . '%')
-                ->where('role_id', '=', '1')
-                ->join('users', 'students.user_id', '=', 'users.id');
+            $rentalsQuery = $rentalsQuery->where('name', 'like', "%$search%");
         }
 
-        $students = $studentsQuery->paginate(8)
+        $rentals = $rentalsQuery->with('location')->paginate(8)
             ->withQueryString();
 
-        return view('students.index')
-            ->with('students', $students);
+        return view('rentals.index', ['rentals' => $rentals]);
     }
 
     /**
@@ -63,8 +56,7 @@ class StudentController extends Controller
             ];
         });
 
-        return view('students.create')
-            ->with('areas', $areas);
+        return view('rentals.create', ['areas' => $areas]);
     }
 
     /**
@@ -75,7 +67,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $student = new Student();
+        $rental = new Rental();
         $location = Location::where('location', 'like', $request->location)
             ->first();
 
@@ -85,70 +77,71 @@ class StudentController extends Controller
             $location->area_id = $request->subcounty;
             $location->saveOrFail();
         }
-        $student->user_id = 440;
-        $student->location_id = $location->id;
-        $student->institution = $request->institution;
-        $student->campus = $request->campus;
-        $student->year = $request->year;
 
-        $student->saveOrFail();
-        return redirect()->route('students.show', $student->id);
+        $rental->location_id = $location->id;
+        $rental->pics_uri = $request->pics_uri;
+        $rental->name = $request->name;
+        $rental->description = $request->description;
+
+        $rental->saveOrFail();
+
+        return redirect()->route('rentals.show', $rental->id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Student  $student
+     * @param  \App\Models\Rental  $rental
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show(Rental $rental)
     {
-        $student = $student->load(['user', 'location']);
-        return view('students.details', ['student' => $student]);
+        $rental = $rental->load('location');
+        return view('rentals.details', ['rental' => $rental]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Student  $student
+     * @param  \App\Models\Rental  $rental
      * @return \Illuminate\Http\Response
      */
-    public function edit(Student $student)
+    public function edit(Rental $rental)
     {
-        return view('students.edit', ['student' => $student]);
+        $rental = $rental->load('location');
+        return view('rentals.edit', ['rental' => $rental]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Student  $student
+     * @param  \App\Models\Rental  $rental
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request, Rental $rental)
     {
         $data = $request->all();
-        $user = $student->user;
-        $user = $user->fill($data);
-        $student = $student->fill($data);
+        $location = $rental->location;
+        $location = $location->fill($data);
+        $rental = $rental->fill($data);
 
-        $user->saveOrFail();
-        $student->saveOrFail();
-        $student->fresh('user');
+        $rental->saveOrFail();
+        $location->saveOrFail();
 
-        return redirect()->route('students.show', $student->id);
+        return redirect()->route('rentals.show', $rental->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Student  $student
+     * @param  \App\Models\Rental  $rental
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy(Rental $rental)
     {
-        if ($student->user->delete()) {
-            return redirect('/');
+        if ($rental->delete()) {
+            return redirect()->route('rentals.index');
         }
         abort(500, 'Internal error, try again later');
     }

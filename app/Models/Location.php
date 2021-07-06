@@ -26,4 +26,9 @@ class Location extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    public function locations()
+    {
+        return $this->hasMany(Rental::class);
+    }
 }

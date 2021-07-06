@@ -9,7 +9,7 @@
                 <!-- line break -->
                 <div class="col-md-8 order-md-1 ">
                     <h4 class="mb-3">Please enter your details to continue</h4>
-                    <form action="{{ route('students.store') }}" method="POST">
+                    <form action="{{ route('rentals.store') }}" method="POST">
                         @csrf
                         <div class=" mb-3">
                             <label for="address">County</label>
@@ -31,18 +31,18 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="institution">Institution</label>
-                            <input type="text" name="institution" class="form-control" id="institution" />
+                            <label for="name">Name</label>
+                            <input type="text" name="name" class="form-control" id="name" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="campus">Campus</label>
-                            <input type="text" name="campus" class="form-control" id="campus" />
+                            <label for="description">Description</label>
+                            <input type="text" name="description" class="form-control" id="description" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="year">Year</label>
-                            <input type="number" name="year" class="form-control" id="year" min=1 max=7 />
+                            <label for="year">Picture</label>
+                            <input type="text" name="picture" class="form-control" id="picture" />
                         </div>
 
                         <button class=" btn btn-primary btn-lg btn-block" type="submit">
