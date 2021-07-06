@@ -52,4 +52,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Student::class);
     }
+
+    public function firstParty()
+    {
+        return $this->hasMany(RoomExchange::class, 'first_party_id');
+    }
+
+    public function secondParty()
+    {
+        return $this->hasMany(RoomExchange::class, 'second_party_id');
+    }
 }
