@@ -9,6 +9,7 @@ class RoomExchange extends Model
 {
     use HasFactory;
 
+    protected $table = 'room_exchange';
     protected $fillable = [
         'first_party_id',
         'second_party_id',

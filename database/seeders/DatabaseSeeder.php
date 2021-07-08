@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StudentSeeder::class,
             RentalSeeder::class,
-            RoomExchange::class
+            RoomExchangeSeeder::class
         ]);
     }
 }
